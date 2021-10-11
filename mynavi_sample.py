@@ -61,6 +61,9 @@ def main():
     # ポップアップを閉じる
     driver.execute_script('document.querySelector(".karte-close").click()')
 
+# 空のDataFrame作成
+    df = pd.DataFrame()
+
     # ページ終了まで繰り返し取得
     while True:
         # 検索結果の一番上の会社名を取得
@@ -72,31 +75,25 @@ def main():
         next_link = []
         for next_link in driver.find_elements_by_class_name("iconFont--arrowLeft"):
             next = next_link.get_attribute("href")
-    
-
-    # 空のDataFrame作成
-#    df = pd.DataFrame()
-
-
+  
         print(len(name_list))
-        print(len(name_title)) 
 
         for list,title in zip(name_list,name_title):
             print(list.text,title.text)
 
+    # DataFrameに対して辞書形式でデータを追加する
+            df = df.append(
+                {"会社名": list.text, 
+                "求人タイトル": title.text}, 
+                ignore_index=True)            
+
         driver.get(next)
         
         if not next_link:
-            break    
-        
-#        # DataFrameに対して辞書形式でデータを追加する
-#        df = df.append(
-#            {"会社名": name.text, 
-#             "項目B": "",
-#             "項目C": ""}, 
-#            ignore_index=True)
-      
+    #csvファイルとして出力
+            df.to_csv("test.csv")
 
+            break    
 
 # 直接起動された場合はmain()を起動(モジュールとして呼び出された場合は起動しないようにするため)
 if __name__ == "__main__":
