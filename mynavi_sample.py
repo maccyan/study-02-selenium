@@ -34,7 +34,7 @@ def set_driver(driver_path, headless_flg):
 
 
 def main():
-    search_keyword = "高収入"
+    search_keyword = input("キーワードを入力してください：")
         # driverを起動
     if os.name == 'nt': #Windows
         driver = set_driver("chromedriver.exe", False)
