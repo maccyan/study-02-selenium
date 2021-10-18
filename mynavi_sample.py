@@ -59,8 +59,10 @@ def main():
 
     time.sleep(5)
     # ポップアップを閉じる
-    driver.execute_script('document.querySelector(".karte-close").click()')
-
+    try:
+        driver.execute_script('document.querySelector(".karte-close").click()')
+    except:
+        pass
 # 空のDataFrame作成
     df = pd.DataFrame()
 
@@ -72,9 +74,10 @@ def main():
         # 求人タイトルの取得
         name_title = driver.find_elements_by_xpath('//section/p/a')
 
+
         next_link = []
-        for next_link in driver.find_elements_by_class_name("iconFont--arrowLeft"):
-            next = next_link.get_attribute("href")
+        for next_links in driver.find_elements_by_class_name("iconFont--arrowLeft"):
+            next_link = next_links.get_attribute("href")
   
         print(len(name_list))
 
@@ -85,15 +88,15 @@ def main():
             df = df.append(
                 {"会社名": list.text, 
                 "求人タイトル": title.text}, 
-                ignore_index=True)            
-
-        driver.get(next)
+                ignore_index=True)                    
         
         if not next_link:
     #csvファイルとして出力
             df.to_csv("test.csv")
 
-            break    
+            break 
+#次ページへ移動          
+        driver.get(next_link)
 
 # 直接起動された場合はmain()を起動(モジュールとして呼び出された場合は起動しないようにするため)
 if __name__ == "__main__":
